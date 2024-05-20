@@ -31,36 +31,40 @@ class Home extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<ApiBloc, ApiState>(
         builder: (context, state) {
-          return ListView.builder(
-            itemCount: state.list.length,
-            itemBuilder: (context, index) {
-              PostModel postModel=state.list[index];
+          if(state.list.isEmpty){
+           return Center(child: CircularProgressIndicator());
+          }else{
+            return ListView.builder(
+              itemCount: state.list.length,
+              itemBuilder: (context, index) {
+                PostModel postModel=state.list[index];
 
-              return Card(
-                child: ListTile(
-                    leading: Text(
-                      postModel.id.toString(),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 30),
-                    ),
-                    title: Text(
-                      postModel.title,
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(postModel.body),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.redAccent,
+                return Card(
+                  child: ListTile(
+                      leading: Text(
+                        postModel.id.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 30),
                       ),
-                      onPressed: () {
-                        context.read<ApiBloc>().add(DeletePostEvent(index));
-                      },
-                    )),
-              );
-            },
-          );
+                      title: Text(
+                        postModel.title,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(postModel.body),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.redAccent,
+                        ),
+                        onPressed: () {
+                          context.read<ApiBloc>().add(DeletePostEvent(index));
+                        },
+                      )),
+                );
+              },
+            );
+          }
         },
       ),
     );

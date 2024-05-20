@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 import 'models/model.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Home(),
     );
   }
@@ -26,41 +25,55 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-   List<PostModel> list=[];
+  List<PostModel> list = [];
 
   @override
-  void initState()  {
+  void initState() {
     // TODO: implement initState
     super.initState();
 
     getdata();
-
-
   }
 
-  void getdata() async{
-    List<PostModel> temp=[];
+  void getdata() async {
+    List<PostModel> temp = [];
     try {
-       temp=await ApiService().FetchData();
-    }catch(e){
+      temp = await ApiService().FetchData();
+    } catch (e) {
       print(e.toString());
     }
     setState(() {
-      list=temp;
+      list = temp;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          body: ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-              return ListTile(
-                leading: Text(list[index].id.toString()),
-              );
-              },),
+      body: ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ListTile(
+                leading: Text(
+                  list[index].id.toString(),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                title: Text(
+                  list[index].title,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(list[index].body),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () {},
+                )),
+          );
+        },
+      ),
     );
   }
 }
